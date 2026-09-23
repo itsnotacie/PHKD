@@ -328,20 +328,7 @@ Key checkpoints referenced in the paper:
 - `kitti-cross-supervised-baseline_best.pth` — No-KD @ KITTI (Table 1 row).
 - `kitti-teacher-vitl14-localce-ext_best.pth` — KITTI teacher.
 
-## 11. Citation
 
-If you find PHKD useful, please cite our paper (ICASSP 2026 submission).
-
-```
-@inproceedings{phkd2026,
-  title  = {PHKD: Distilling Lightweight Models for Fine-Grained Cross-View Geo-Localization},
-  author = {Li, Yuqi and Fang, Yiru and Tong, Shaowen and Feng, Xiaoqin and
-            Yang, Chuanguang and Duan, Huiran and Tian, Yingli},
-  booktitle = {IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
-  year   = {2026}
-}
-```
-
-## 12. Acknowledgements
+## 11. Acknowledgements
 
 This code base builds on the excellent [GeoDistill](https://github.com/Yujiao-Shi/GeoDistill) and [HighlyAccurate](https://github.com/shiyujiao/HighlyAccurate) repositories. The teacher checkpoints for VIGOR follow the GeoDistill release; DINOv2 backbones follow [facebookresearch/dinov2](https://github.com/facebookresearch/dinov2).
