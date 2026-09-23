@@ -1,0 +1,65 @@
+data:
+  dataset: vigor
+  dataset_root: /home/yiru_fang/VIGOR
+  cross_area: true
+  image_size: 512
+  sat_size: 640
+  zoom: 20
+  bev_size: 512
+  grid_size: 8
+  ori_noise: 45
+
+model:
+  teacher_ckpt: "/home/yiru_fang/geokd-main/ckpt/translation/vigor/cross-geodistill-dino.pth"
+  student_ckpt: null
+  teacher_dino_model: vitb14
+  student_dino_model: vits14
+  student_width: 0.5
+  init_from_teacher: false
+  levels: [0, 2]
+  channels: [64, 16, 4]
+
+distill:
+  student_temp: 0.06
+  teacher_temp: 0.06
+  distill_mode: peak_hard
+  uncertainty_weighting: false
+  uncertainty_weight_min: 0.25
+  uncertainty_weight_power: 1.0
+  peak_radius: 2
+  # Extrapolate best trend: 1→4 gave -0.033m, try 8.
+  peak_topk: 8
+  peak_region_weight: 4.0
+  hard_negative_topk: 32
+  hard_negative_weight: 1.0
+
+train:
+  train: true
+  batch_size_per_gpu: 56
+  epochs: 10
+  seed: 2023
+  clip: 1.0
+
+eval:
+  target: student
+
+optim:
+  lr: 0.0001
+  min_lr: 0.00001
+  weight_decay: 0.00001
+
+runtime:
+  distributed: false
+  gpuid: [0]
+  num_workers: 16
+
+logging:
+  wandb: false
+  wandb_log_interval: 20
+  visualize: false
+  save_visualization: false
+  vis_freq: 100
+
+output:
+  save_path: /home/yiru_fang/geokd-main/checkpoints
+  name: vigor-cross-peak-hard-topk8

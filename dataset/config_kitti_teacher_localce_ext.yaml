@@ -1,0 +1,69 @@
+data:
+  dataset: kitti
+  dataset_root: /home/yiru_fang/KITTI/KITTI
+  train_file: /home/yiru_fang/KITTI/dataLoader/train_files.txt
+  test1_file: /home/yiru_fang/KITTI/dataLoader/test1_files.txt
+  test2_file: /home/yiru_fang/KITTI/dataLoader/test2_files.txt
+  cross_area: true
+  rotation_range: 0
+  shift_range_lat: 20.0
+  shift_range_lon: 20.0
+  image_size: 512
+  sat_size: 640
+  zoom: 20
+  bev_size: 300
+
+model:
+  teacher_ckpt: null
+  # Resume from v1 (10-ep localce) best ckpt to continue training.
+  student_ckpt: /home/yiru_fang/geokd-main/checkpoints/kitti/geokd/student/kitti-teacher-vitl14-localce_best.pth
+  teacher_dino_model: vitl14
+  student_dino_model: vitl14
+  student_width: 1.0
+  init_from_teacher: false
+  levels: [0, 2]
+  channels: [64, 16, 4]
+
+distill:
+  distill_mode: ce
+  student_temp: 0.06
+  teacher_temp: 0.06
+
+train:
+  train: true
+  supervision: supervised
+  supervised_loss: both
+  localization_sigma: 2.0
+  localization_temperature: 10.0
+  contrastive_weight: 0.1
+  batch_size_per_gpu: 32
+  # 30 total: continues from epoch 10, adds 20 more epochs.
+  epochs: 30
+  seed: 2023
+  clip: 1.0
+  # Fresh cosine schedule over the added epochs so LR does not stay at eta_min.
+  reset_scheduler: true
+
+eval:
+  target: student
+
+optim:
+  lr: 0.0001
+  min_lr: 0.00001
+  weight_decay: 0.00001
+
+runtime:
+  distributed: false
+  gpuid: [0]
+  num_workers: 16
+
+logging:
+  wandb: false
+  wandb_log_interval: 20
+  visualize: false
+  save_visualization: false
+  vis_freq: 100
+
+output:
+  save_path: /home/yiru_fang/geokd-main/checkpoints
+  name: kitti-teacher-vitl14-localce-ext

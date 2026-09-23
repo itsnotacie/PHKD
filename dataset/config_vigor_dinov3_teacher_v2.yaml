@@ -1,0 +1,55 @@
+data:
+  dataset: vigor
+  dataset_root: /home/yiru_fang/VIGOR
+  cross_area: true
+  image_size: 512
+  sat_size: 640
+  zoom: 20
+  bev_size: 512
+  grid_size: 8
+  ori_noise: 45
+
+model:
+  teacher_ckpt: null
+  student_ckpt: null
+  teacher_dino_model: vitl16_dual
+  student_dino_model: vitl16_dual
+  student_width: null
+  init_from_teacher: false
+  levels: [0, 2]
+  channels: [64, 16, 4]
+
+distill:
+  distill_mode: ce
+
+train:
+  train: true
+  supervision: supervised
+  batch_size_per_gpu: 10
+  epochs: 10
+  seed: 2023
+  clip: 1.0
+
+eval:
+  target: student
+
+optim:
+  lr: 0.0001
+  min_lr: 0.00001
+  weight_decay: 0.00001
+
+runtime:
+  distributed: true
+  gpuid: [0]
+  num_workers: 8
+
+logging:
+  wandb: true
+  wandb_log_interval: 20
+  visualize: false
+  save_visualization: false
+  vis_freq: 100
+
+output:
+  save_path: checkpoints
+  name: vigor-dinov3-teacher-v2

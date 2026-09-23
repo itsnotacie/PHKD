@@ -1,0 +1,62 @@
+data:
+  dataset: vigor
+  dataset_root: /home/yiru_fang/VIGOR
+  cross_area: true
+  image_size: 512
+  sat_size: 640
+  zoom: 20
+  bev_size: 512
+  grid_size: 8
+  ori_noise: 45
+
+model:
+  teacher_ckpt: "/home/yiru_fang/geokd-main/ckpt/translation/vigor/cross-geodistill-dino.pth"
+  student_ckpt: null
+  teacher_dino_model: vitb14
+  student_dino_model: vits14
+  student_width: 0.5
+  init_from_teacher: false
+  levels: [0, 2]
+  channels: [64, 16, 4]
+
+distill:
+  # Sun et al., CVPR 2024: use larger tau (~2) when logits are Z-score standardized
+  student_temp: 2.0
+  teacher_temp: 2.0
+  distill_mode: peak_hard_zscore
+  peak_radius: 2
+  peak_topk: 1
+  peak_region_weight: 4.0
+  hard_negative_topk: 32
+  hard_negative_weight: 1.0
+
+train:
+  train: true
+  batch_size_per_gpu: 56
+  epochs: 10
+  seed: 2023
+  clip: 1.0
+
+eval:
+  target: student
+
+optim:
+  lr: 0.0001
+  min_lr: 0.00001
+  weight_decay: 0.00001
+
+runtime:
+  distributed: false
+  gpuid: [0]
+  num_workers: 8
+
+logging:
+  wandb: false
+  wandb_log_interval: 20
+  visualize: false
+  save_visualization: false
+  vis_freq: 100
+
+output:
+  save_path: checkpoints
+  name: vigor-cross-peak-hard-zscore
